@@ -53,8 +53,8 @@ split_policy(Graph,Parts) :-
     findall(G,rdf_walk(Graph,rdf(_,PA,_),G),Parts).
 
 % print a gragh to a stream
-rdf2tutle(_,[]).
-rdf2tutle(Stream,Graph) :-
+rdf2turtle(_,[]).
+rdf2turtle(Stream,Graph) :-
     rdf_save_turtle(
             Stream,[
               expand(triple_in(Graph)),
@@ -68,6 +68,6 @@ main([]) :-
 main([File|Rules]) :-
     n3_reasoning(File,Rules,Graph),
     split_policy(Graph,Parts),
-    maplist(rdf2tutle(stream(current_output)),Parts).
+    maplist(rdf2turtle(stream(current_output)),Parts).
 
    
