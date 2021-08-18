@@ -8,21 +8,18 @@
 
 :- initialization(main,main).
 
-% setting policy namespace
-policy("https://www.example.org/ns/policy#policy").
+% prefixes
+pfx('pol','https://www.example.org/ns/policy#').
+pfx('fno','https://w3id.org/function/ontology#').
 
 % path to eye reaseoner
 eye("/usr/local/bin/eye").
 
-% directory with rules
-rules("rules").
-
-% listing of all Notation3 rules in the rules directory
-rules_list(Directory,Result) :-
-    directory_files(Directory,Files),
-    sort(Files,SortedFiles),
-    include(re_match(".*\\.n3$"),SortedFiles,RuleFiles),
-    maplist(string_concat(Directory),RuleFiles,Result).
+string_uri(String,URI) :-
+  split_string(String,":","",[P,U]),
+  atom_string(PA,P),
+  pfx(PA,NS),
+  atomic_list_concat([NS,U],URI).
 
 % start reasoning on the input file and capture the output
 n3_reasoning(File,Rules,Output) :-
@@ -48,9 +45,8 @@ triple_in(RDF, S,P,O,_G) :-
 
 % split the graph up into policies
 split_policy(Graph,Parts) :- 
-    policy(PS),
-    atom_string(PA,PS),
-    findall(G,rdf_walk(Graph,rdf(_,PA,_),G),Parts).
+    string_uri("pol:policy",Policy),
+    findall(G,rdf_walk(Graph,rdf(_,Policy,_),G),Parts).
 
 % print a gragh to a stream
 rdf2turtle(_,[]).
@@ -62,12 +58,28 @@ rdf2turtle(Stream,Graph) :-
               silent(true)
             ]).
 
+'http://example.org/appendToLog'(Id,_) :-
+    writeln(">>Appending Log"),
+    format("..~w~n",[Id]).
+
+'http://example.org/sendEmail'(Id,_) :-
+    writeln(">>Sending Mail"),
+    format("..~w~n",[Id]).
+
+execute_policy(Graph) :-
+    string_uri("fno:executes",Exec),
+    string_uri("pol:policy",Pol),
+    rdf_match(Graph,rdf(Id,Pol,Action)),
+    rdf_match(Graph,rdf(_,Exec,Func)),
+    callable(Action),call(Func,Id,Graph).
+
 main([]) :-
     writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
 
 main([File|Rules]) :-
     n3_reasoning(File,Rules,Graph),
     split_policy(Graph,Parts),
-    maplist(rdf2turtle(stream(current_output)),Parts).
+    % maplist(rdf2turtle(stream(current_output)),Parts),
+    maplist(execute_policy,Parts).
 
    
