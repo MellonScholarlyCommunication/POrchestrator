@@ -48,7 +48,7 @@ split_policy(Graph,Parts) :-
     string_uri("pol:policy",Policy),
     findall(G,rdf_walk(Graph,rdf(_,Policy,_),G),Parts).
 
-% print a gragh to a stream
+% print a graph to a stream
 rdf2turtle(_,[]).
 rdf2turtle(Stream,Graph) :-
     rdf_save_turtle(
