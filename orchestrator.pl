@@ -36,7 +36,7 @@ n3_reasoning(File,Rules,Output) :-
     setup_call_cleanup(
       process_create(
           Path, Args ,
-          [ stdout(pipe(Out)) ]
+          [ stdout(pipe(Out)) , stderr(null) ]
       ),
       rdf_read_turtle(Out,Output,[anon_prefix(AnonBase)]),
       close(Out)
@@ -46,26 +46,28 @@ n3_reasoning(File,Rules,Output) :-
 triple_in(RDF, S,P,O,_G) :-
       member(rdf(S,P,O), RDF).
 
-policy_partition(Graph,Parts) :- 
+% split the graph up into policies
+split_policy(Graph,Parts) :- 
     policy(PS),
     atom_string(PA,PS),
-    writeln(PA),
     findall(G,rdf_walk(Graph,rdf(_,PA,_),G),Parts).
 
-rdf2tutle(Graph) :-
+% print a gragh to a stream
+rdf2tutle(_,[]).
+rdf2tutle(Stream,Graph) :-
     rdf_save_turtle(
-            stream(current_output),[
+            Stream,[
               expand(triple_in(Graph)),
-              inline_bnodes(true)
+              inline_bnodes(true) ,
+              silent(true)
             ]).
 
 main([]) :-
-    writeln(user_error,"usage: orchestrator.pl N3").
+    writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
 
-main([File|_]) :-
-    rules_list("rules/",Rules),
+main([File|Rules]) :-
     n3_reasoning(File,Rules,Graph),
-    policy_partition(Graph,Parts),
-    maplist(rdf2tutle,Parts).
+    split_policy(Graph,Parts),
+    maplist(rdf2tutle(stream(current_output)),Parts).
 
    
