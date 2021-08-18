@@ -69,9 +69,9 @@ rdf2turtle(Stream,Graph) :-
 execute_policy(Graph) :-
     string_uri("fno:executes",Exec),
     string_uri("pol:policy",Pol),
-    rdf_match(Graph,rdf(Id,Pol,Action)),
+    rdf_match(Graph,rdf(Id,Pol,_)),
     rdf_match(Graph,rdf(_,Exec,Func)),
-    callable(Action),call(Func,Id,Graph).
+    call(Func,Id,Graph).
 
 main([]) :-
     writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
