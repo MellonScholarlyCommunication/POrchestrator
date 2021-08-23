@@ -4,29 +4,19 @@
 :- use_module(library(process)).
 :- use_module(library(lists)).
 :- use_module(library(apply)).
-:- use_module(rdf_walk).
+:- use_module(rdf_tools).
 :- use_module(actions).
 
 :- initialization(main,main).
 
-% prefixes
-pfx('pol','https://www.example.org/ns/policy#').
-pfx('fno','https://w3id.org/function/ontology#').
-
 % path to eye reaseoner
 eye("/usr/local/bin/eye").
-
-string_uri(String,URI) :-
-  split_string(String,":","",[P,U]),
-  atom_string(PA,P),
-  pfx(PA,NS),
-  atomic_list_concat([NS,U],URI).
 
 % start reasoning on the input file and capture the output
 n3_reasoning(File,Rules,Output) :-
     eye(Path),
     flatten(
-      [ '--pass-only-new' , '--nope' , '--quiet' ,
+      [ '--pass' , '--nope' , '--quiet' ,
         file(File) , Rules ] ,
       Args
     ),

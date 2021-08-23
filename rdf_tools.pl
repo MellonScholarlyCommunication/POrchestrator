@@ -1,10 +1,24 @@
-:- module(rdf_walk, [
+:- module(rdf_tools, [
       rdf_match/2 ,
       rdf_next/3,
-      rdf_walk/3
+      rdf_walk/3,
+      string_uri/2
 ]).
 
 :- use_module(library(lists)).
+
+% prefixes
+pfx('pol','https://www.example.org/ns/policy#').
+pfx('fno','https://w3id.org/function/ontology#').
+pfx('ex','http://example.org/').
+pfx('as','https://www.w3.org/ns/activitystreams#').
+
+% Eeturn a URI for a string
+string_uri(String,URI) :-
+  split_string(String,":","",[P,U]),
+  atom_string(PA,P),
+  pfx(PA,NS),
+  atomic_list_concat([NS,U],URI).
 
 % Find a matching triple in the graph
 rdf_match(Graph,Triple) :-
@@ -21,7 +35,7 @@ rdf_walk(Graph,Triple,NewGraph) :-
     rdf_walk_many(Graph,[Triple],[Triple],NewGraph).
 
 rdf_walk_many(_,[],A,A).
-
+    
 rdf_walk_many(Graph,[Head|Tail],Acc,NewGraph) :-
     % find all the triples conneced to the head
     findall(X,rdf_next(Graph,Head,X),Next),
