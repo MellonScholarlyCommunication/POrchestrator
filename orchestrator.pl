@@ -8,8 +8,9 @@
 
 :- initialization(main,main).
 
-% setting policy namespace
-policy("https://www.example.org/ns/policy#policy").
+% set namespaces
+policy('https://www.example.org/ns/policy#policy').
+fno('https://w3id.org/function/ontology#').
 
 % path to eye reaseoner
 eye("/usr/local/bin/eye").
@@ -66,8 +67,27 @@ main([]) :-
     writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
 
 main([File|Rules]) :-
+    print_message(informational,reason_about(File,Rules)),
     n3_reasoning(File,Rules,Graph),
+
+    print_message(informational,graph(Graph)),
     split_policy(Graph,Parts),
+
     maplist(rdf2tutle(stream(current_output)),Parts).
 
-   
+/************
+ * Messages */
+ ************/
+
+:- multifile prolog:message//1 .
+
+prolog:message(reason_about(File,Rules)) -->
+    [ 'orchestrator: reasoning about ~w with ~w'-[File,Rules] , nl ].
+
+prolog:message(graph(Graph)) -->
+    { with_output_to(
+        string(T),
+        rdf2tutle(stream(current_output),Graph)
+      )
+    } ,
+    [ 'graph:' , nl , '~w'-[T]].
