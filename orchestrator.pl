@@ -8,22 +8,18 @@
 
 :- initialization(main,main).
 
-% set namespaces
-policy('https://www.example.org/ns/policy#policy').
-fno('https://w3id.org/function/ontology#').
+% prefixes
+pfx('pol','https://www.example.org/ns/policy#').
+pfx('fno','https://w3id.org/function/ontology#').
 
 % path to eye reaseoner
 eye("/usr/local/bin/eye").
 
-% directory with rules
-rules("rules").
-
-% listing of all Notation3 rules in the rules directory
-rules_list(Directory,Result) :-
-    directory_files(Directory,Files),
-    sort(Files,SortedFiles),
-    include(re_match(".*\\.n3$"),SortedFiles,RuleFiles),
-    maplist(string_concat(Directory),RuleFiles,Result).
+string_uri(String,URI) :-
+  split_string(String,":","",[P,U]),
+  atom_string(PA,P),
+  pfx(PA,NS),
+  atomic_list_concat([NS,U],URI).
 
 % start reasoning on the input file and capture the output
 n3_reasoning(File,Rules,Output) :-
@@ -49,9 +45,43 @@ triple_in(RDF, S,P,O,_G) :-
 
 % split the graph up into policies
 split_policy(Graph,Parts) :- 
-    policy(PS),
-    atom_string(PA,PS),
-    findall(G,rdf_walk(Graph,rdf(_,PA,_),G),Parts).
+    string_uri("pol:policy",Policy),
+    findall(G,rdf_walk(Graph,rdf(_,Policy,_),G),Parts).
+
+% print a graph to a stream
+rdf2turtle(_,[]).
+rdf2turtle(Stream,Graph) :-
+    rdf_save_turtle(
+            Stream,[
+              expand(triple_in(Graph)),
+              inline_bnodes(true) ,
+              silent(true)
+            ]).
+
+'http://example.org/appendToLog'(Id,_) :-
+    writeln(">>Appending Log"),
+    format("..~w~n",[Id]).
+
+'http://example.org/sendEmail'(Id,_) :-
+    writeln(">>Sending Mail"),
+    format("..~w~n",[Id]).
+
+execute_policy(Graph) :-
+    string_uri("fno:executes",Exec),
+    string_uri("pol:policy",Pol),
+    
+    % find the id
+    rdf_match(Graph,rdf(Id,Pol,Policy)),
+
+    % find the function name
+    rdf_match(Graph,rdf(Policy,Exec,Func)),
+    
+    % find the subgraph of arguments
+    findall(G,rdf_walk(Graph,rdf(Policy,_,_),G),Parts),
+    flatten(Parts,Args),
+
+    print_message(informational,policy(Func,Id,Args)),
+    call(Func,Id,Args).
 
 % print a gragh to a stream
 rdf2tutle(_,[]).
@@ -72,8 +102,8 @@ main([File|Rules]) :-
 
     print_message(informational,graph(Graph)),
     split_policy(Graph,Parts),
-
-    maplist(rdf2tutle(stream(current_output)),Parts).
+   
+    maplist(execute_policy,Parts).
 
 /************
  * Messages */
@@ -85,9 +115,19 @@ prolog:message(reason_about(File,Rules)) -->
     [ 'orchestrator: reasoning about ~w with ~w'-[File,Rules] , nl ].
 
 prolog:message(graph(Graph)) -->
-    { with_output_to(
+    { 
+      with_output_to(
         string(T),
         rdf2tutle(stream(current_output),Graph)
       )
     } ,
     [ 'graph:' , nl , '~w'-[T]].
+
+prolog:message(policy(Func,Id,Graph)) --> 
+    { 
+      with_output_to(
+        string(T),
+        rdf2tutle(stream(current_output),Graph)
+      )
+    } ,
+    [ 'executing: ~w(~w) with graph:'-[Func,Id] , nl , T].

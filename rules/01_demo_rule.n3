@@ -18,6 +18,7 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
       fno:executes ex:sendEmail ;
       ex:from "my@myself.and.i" ;
       ex:to "you@yourself.edu" ;
-      ex:subject "A new resource was created!"
+      ex:subject "A new resource was created!" ;
+      ex:list (1 2 3)
   ] .
 }.
