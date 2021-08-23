@@ -5,6 +5,7 @@
 :- use_module(library(lists)).
 :- use_module(library(apply)).
 :- use_module(rdf_walk).
+:- use_module(actions).
 
 :- initialization(main,main).
 
@@ -58,14 +59,6 @@ rdf2turtle(Stream,Graph) :-
               silent(true)
             ]).
 
-'http://example.org/appendToLog'(Id,_) :-
-    writeln(">>Appending Log"),
-    format("..~w~n",[Id]).
-
-'http://example.org/sendEmail'(Id,_) :-
-    writeln(">>Sending Mail"),
-    format("..~w~n",[Id]).
-
 execute_policy(Graph) :-
     string_uri("fno:executes",Exec),
     string_uri("pol:policy",Pol),
@@ -80,8 +73,8 @@ execute_policy(Graph) :-
     findall(G,rdf_walk(Graph,rdf(Policy,_,_),G),Parts),
     flatten(Parts,Args),
 
-    print_message(informational,policy(Func,Id,Args)),
-    call(Func,Id,Args).
+    % call the function
+    action(Func,Id,Args).
 
 % print a gragh to a stream
 rdf2tutle(_,[]).
@@ -122,12 +115,3 @@ prolog:message(graph(Graph)) -->
       )
     } ,
     [ 'graph:' , nl , '~w'-[T]].
-
-prolog:message(policy(Func,Id,Graph)) --> 
-    { 
-      with_output_to(
-        string(T),
-        rdf2tutle(stream(current_output),Graph)
-      )
-    } ,
-    [ 'executing: ~w(~w) with graph:'-[Func,Id] , nl , T].
