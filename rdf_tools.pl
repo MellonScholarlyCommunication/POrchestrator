@@ -26,6 +26,10 @@ string_uri(String,URI) :-
   pfx(PA,NS),
   atomic_list_concat([NS,U],URI).
 
+% query used in rdf_save_turtle
+triple_in(RDF,S,P,O,_G) :-
+      member(rdf(S,P,O), RDF).
+
 % print a graph to a stream
 rdf2turtle(_,[]).
 rdf2turtle(Stream,Graph) :-

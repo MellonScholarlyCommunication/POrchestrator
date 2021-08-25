@@ -1,4 +1,4 @@
-N3 = data/mellon_accept.n3
+N3 = data/mellon_accept.n3 data/coar_offer.n3
 
 all: $(N3)
 

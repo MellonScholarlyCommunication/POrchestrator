@@ -26,14 +26,9 @@ n3_reasoning(File,Rules,Output) :-
           Path, Args ,
           [ stdout(pipe(Out)) , stderr(null) ]
       ),
-      writeln(Out),
       rdf_read_turtle(Out,Output,[anon_prefix(AnonBase)]),
       close(Out)
     ).
-
-% query used in rdf_save_turtle
-triple_in(RDF, S,P,O,_G) :-
-      member(rdf(S,P,O), RDF).
 
 % split the graph up into policies
 split_policy(Graph,Parts) :- 
