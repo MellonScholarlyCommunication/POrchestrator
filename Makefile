@@ -9,5 +9,5 @@ clean:
 	rm data/*.n3
 
 logclean:
-	rm -f output/appendLog/* ;
+	rm -f output/appendToLog/* ;
 	rm -f output/sendNotification/* 

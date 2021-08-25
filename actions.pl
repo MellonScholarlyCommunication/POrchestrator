@@ -1,5 +1,5 @@
 :- module(actions, [
-      action/4
+      action/3
 ]).
 
 :- use_module(rdf_tools).
@@ -7,39 +7,54 @@
 
 cfg(outputDir,"./output").
 
+% Generate a UUID
 gen_id(Id) :-
     uuid(Id).
 
+% Generate a filename based on an Id
 gen_file(Func,Id,File) :- 
     cfg(outputDir,Dir),
     swritef(File,'%w/%w/%w',[Dir,Func,Id]).
 
-'http://example.org/appendToLog'(_,PolicyId,Policy) :-
-    print_message(informational,action('appendToLog',PolicyId,Policy)),
-    format("..~w~n",[PolicyId]).
-
-'http://example.org/sendNotification'(Graph,PolicyId,Policy) :-
-    print_message(informational,action('sendNotificAtion',PolicyId,Policy)),
-
-    % Read out the notification    
-    string_uri("ex:notification",Notification),
-    rdf_match(Graph,rdf(Policy,Notification,Params)),
+% Read the Arg valid from the policy in the Graph
+policy_param(Graph,Policy,Arg,Result) :-
+    string_uri(Arg,ArgUri),
+    rdf_match(Graph,rdf(Policy,ArgUri,Params)),
     findall(
         G,
         rdf_walk(Graph,rdf(Params,_,_),G),
         Parts),
-    flatten(Parts,NewGraph),
+    flatten(Parts,Result).
+
+'http://example.org/appendToLog'(Graph,Policy) :-
+    print_message(informational,action('appendToLog',Policy)),
+
+    policy_param(Graph,Policy,"ex:log",NewGraph),
+    
+    gen_id(Id),
+
+    gen_file('appendToLog',Id,File),
+
+    open(File,write,Stream),
+    rdf2turtle(Stream,NewGraph),
+    close(Stream).
+
+'http://example.org/sendNotification'(Graph,Policy) :-
+    print_message(informational,action('sendNotificAtion',Policy)),
+
+    % Read out the notification   
+    policy_param(Graph,Policy,"ex:notification",NewGraph), 
 
     % Find the current (blank) node of the notification
     string_uri("rdf:type",Type),
-    rdf_match(NewGraph,rdf(Node,Type,_)),
+    rdf_match(NewGraph,rdf(BlankNode,Type,_)),
 
-    % Create a new identifier for the node
+    % Create a new URI for the current (blank) node
     gen_id(Id),
-    atom_concat('urn:uuid:',Id,IdUri),
+    atom_concat('urn:uuid:',Id,UriNode),
     
-    % Set the subject of the new graph
-    fix_subject(NewGraph,Node,IdUri,OutputGraph),
+    % Set the URI as subject of the new graph
+    fix_subject(NewGraph,BlankNode,UriNode,OutputGraph),
 
     gen_file('sendNotification',Id,File),
 
@@ -48,10 +63,10 @@ gen_file(Func,Id,File) :-
     close(Stream).
 
 % execute the action
-action(Graph,Id,Policy,Func) :-
-    call(Func,Graph,Id,Policy).
+action(Graph,Policy,Func) :-
+    call(Func,Graph,Policy).
 
 :- multifile prolog:message//1 .
 
-prolog:message(action(Func,Id,Policy)) --> 
-    [ 'action: ~w(~w,~w)'-[Func,Id,Policy] , nl].
+prolog:message(action(Func,Policy)) --> 
+    [ 'action: ~w(~w)'-[Func,Policy] , nl ].

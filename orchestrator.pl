@@ -35,15 +35,14 @@ split_policy(Graph,Parts) :-
     string_uri("pol:policy",Policy),
     findall(rdf(S,Policy,O),member(rdf(S,Policy,O),Graph),Parts).
 
-execute_policy(Graph,rdf(PolicyId,_,Policy)) :-
-    string_uri("fno:executes",Exec),
+execute_policy(Graph,rdf(_,_,Policy)) :-
+    string_uri("fno:executes",Executes),
 
     % find the function name
-    rdf_match(Graph,rdf(Policy,Exec,Func)),
+    rdf_match(Graph,rdf(Policy,Executes,Func)),
 
     % call the function
-    action(Graph,PolicyId,Policy,Func).
-
+    action(Graph,Policy,Func).
 
 main([]) :-
     writeln(user_error,"usage: orchestrator.pl data/N3 RULES").

@@ -11,13 +11,12 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
   ?s a ?class .
   ?class list:in (as:Offer) .
 
-  ?s as:object ?object .
   ?s as:origin ?origin .
   ?s as:target ?target .
 }
 =>
 {
-  pol:test pol:policy [
+  [ pol:policy [
       a fno:Execution ;
       fno:executes ex:sendNotification ;
       ex:notification [
@@ -26,5 +25,6 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
         as:target ?origin ;
         as:origin ?target  
       ]
+    ]
   ].
 }.
