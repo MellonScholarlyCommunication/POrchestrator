@@ -7,3 +7,7 @@ data/%.n3 : data/%.jsonld
 
 clean:
 	rm data/*.n3
+
+logclean:
+	rm -f output/appendLog/* ;
+	rm -f output/sendNotification/* 

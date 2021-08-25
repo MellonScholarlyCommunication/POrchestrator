@@ -1,1 +1,3 @@
 data/*.n3
+output/appendLog
+output/sendNotification

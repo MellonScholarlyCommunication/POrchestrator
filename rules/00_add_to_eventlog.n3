@@ -13,8 +13,8 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 }
 =>
 {
-  ?s pol:policy [
+  [ pol:policy [
       a fno:Execution ;
       fno:executes ex:appendToLog
-  ] .
+  ] ]
 }.

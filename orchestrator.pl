@@ -26,6 +26,7 @@ n3_reasoning(File,Rules,Output) :-
           Path, Args ,
           [ stdout(pipe(Out)) , stderr(null) ]
       ),
+      writeln(Out),
       rdf_read_turtle(Out,Output,[anon_prefix(AnonBase)]),
       close(Out)
     ).
@@ -37,44 +38,17 @@ triple_in(RDF, S,P,O,_G) :-
 % split the graph up into policies
 split_policy(Graph,Parts) :- 
     string_uri("pol:policy",Policy),
-    findall(G,rdf_walk(Graph,rdf(_,Policy,_),G),Parts).
+    findall(rdf(S,Policy,O),member(rdf(S,Policy,O),Graph),Parts).
 
-% print a graph to a stream
-rdf2turtle(_,[]).
-rdf2turtle(Stream,Graph) :-
-    rdf_save_turtle(
-            Stream,[
-              expand(triple_in(Graph)),
-              inline_bnodes(true) ,
-              silent(true)
-            ]).
-
-execute_policy(Graph) :-
+execute_policy(Graph,rdf(PolicyId,_,Policy)) :-
     string_uri("fno:executes",Exec),
-    string_uri("pol:policy",Pol),
-    
-    % find the id
-    rdf_match(Graph,rdf(Id,Pol,Policy)),
 
     % find the function name
     rdf_match(Graph,rdf(Policy,Exec,Func)),
-    
-    % find the subgraph of arguments
-    findall(G,rdf_walk(Graph,rdf(Policy,_,_),G),Parts),
-    flatten(Parts,Args),
 
     % call the function
-    action(Func,Id,Args).
+    action(Graph,PolicyId,Policy,Func).
 
-% print a gragh to a stream
-rdf2tutle(_,[]).
-rdf2tutle(Stream,Graph) :-
-    rdf_save_turtle(
-            Stream,[
-              expand(triple_in(Graph)),
-              inline_bnodes(true) ,
-              silent(true)
-            ]).
 
 main([]) :-
     writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
@@ -86,7 +60,7 @@ main([File|Rules]) :-
     print_message(informational,graph(Graph)),
     split_policy(Graph,Parts),
    
-    maplist(execute_policy,Parts).
+    maplist(execute_policy(Graph),Parts).
 
 /************
  * Messages */
@@ -101,7 +75,7 @@ prolog:message(graph(Graph)) -->
     { 
       with_output_to(
         string(T),
-        rdf2tutle(stream(current_output),Graph)
+        rdf2turtle(stream(current_output),Graph)
       )
     } ,
     [ 'graph:' , nl , '~w'-[T]].

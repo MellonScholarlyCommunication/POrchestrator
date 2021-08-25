@@ -2,9 +2,12 @@
       rdf_match/2 ,
       rdf_next/3,
       rdf_walk/3,
-      string_uri/2
+      string_uri/2,
+      rdf2turtle/2,
+      fix_subject/4
 ]).
 
+:- use_module(library(semweb/turtle)).
 :- use_module(library(lists)).
 
 % prefixes
@@ -12,23 +15,40 @@ pfx('pol','https://www.example.org/ns/policy#').
 pfx('fno','https://w3id.org/function/ontology#').
 pfx('ex','http://example.org/').
 pfx('as','https://www.w3.org/ns/activitystreams#').
+pfx('rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#').
 
-% Eeturn a URI for a string
+% string_uri(+ShortUrl,-LongUrl)
+% Return a URI for a string
+%   E.g. string_uri('as:origin','https://www.w3.org/ns/activitystreams#orgin')
 string_uri(String,URI) :-
   split_string(String,":","",[P,U]),
   atom_string(PA,P),
   pfx(PA,NS),
   atomic_list_concat([NS,U],URI).
 
+% print a graph to a stream
+rdf2turtle(_,[]).
+rdf2turtle(Stream,Graph) :-
+    rdf_save_turtle(
+            Stream,[
+              expand(triple_in(Graph)),
+              inline_bnodes(true) ,
+              silent(true)
+            ]).
+
+% rdf_match(+Graph,+Triple)
 % Find a matching triple in the graph
 rdf_match(Graph,Triple) :-
     member(Triple,Graph).
 
+% rdf_next(+Graph,+Triple,-NextTriple)
 % Find a next neighbour triple
 rdf_next(Graph,rdf(_,_,Object),rdf(Object,X,Y)) :-
     rdf_match(Graph,rdf(Object,X,Y)).
 
-rdf_walk([],_,[]).
+% rdf_walk(+Graph,+Triple,-NewGraph)
+% Start from the Triple and find all matching subgraphs 0,..N
+rdf_walk([],_,[],_).
 
 rdf_walk(Graph,Triple,NewGraph) :-
     rdf_match(Graph,Triple),
@@ -48,7 +68,16 @@ rdf_walk_many(Graph,[Head|Tail],Acc,NewGraph) :-
     % and execute the rest
     rdf_walk_many(Graph,ToDo,NewAcc,NewGraph).
 
- % basic test
+fix_subject([],_,_,[]).
+
+fix_subject([rdf(Old,P,O)|Tail],Old,New,[rdf(New,P,O)|Res]) :-
+    fix_subject(Tail,Old,New,Res).
+
+fix_subject([rdf(S,P,O)|Tail],Old,New,[rdf(S,P,O)|Res]) :-
+    S \= Old ,
+    fix_subject(Tail,Old,New,Res).
+
+% basic test
  test0 :-
     rdf_walk([],rdf(a,b,c),[]).
 

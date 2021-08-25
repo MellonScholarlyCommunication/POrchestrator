@@ -11,16 +11,20 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
   ?s a ?class .
   ?class list:in (as:Offer) .
 
+  ?s as:object ?object .
   ?s as:origin ?origin .
+  ?s as:target ?target .
 }
 =>
 {
-  ?s pol:policy [
+  pol:test pol:policy [
       a fno:Execution ;
-      fno:executes ex:sendEmail ;
+      fno:executes ex:sendNotification ;
       ex:notification [
         a as:Accept ;
-        as:target ?origin
+        as:inReplyTo ?s ;
+        as:target ?origin ;
+        as:origin ?target  
       ]
-  ] .
+  ].
 }.
