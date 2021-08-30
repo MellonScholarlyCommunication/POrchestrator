@@ -8,10 +8,13 @@ data/%.n3 : data/%.jsonld
 clean:
 	rm data/*.n3
 
-logclean:
+cleanlog:
 	rm -f output/appendToLog/* ;
 	rm -f output/sendNotification/* 
 
+cache:
+	wget -O context/notify.json https://notify.coar-repositories.org/schema/notify.json ;
+	wget -O context/activitystreams.jsonld https://www.w3.org/ns/activitystreams.jsonld
 compile:
 	tsc
 

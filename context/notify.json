@@ -1,0 +1,29 @@
+{
+  "@context" : {
+    "@vocab": "http://purl.org/coar/notify_vocabulary/" ,
+    "ietf": "http://www.iana.org/assignments/relation/",
+    "coar-notify": "http://purl.org/coar/notify_vocabulary/",
+    "sorg": "http://schema.org/",
+
+    "EndorsementRequest": "coar-notify:EndorsementRequest",
+    "EndorsementSuccess": "coar-notify:EndorsementSuccess",
+    "EndorsementFailure": "coar-notify:EndorsementFailure",
+    "IngestRequest": "coar-notify:IngestRequest",
+    "IngestSuccess": "coar-notify:IngestSuccess",
+    "IngestFailure": "coar-notify:IngestFailure",
+    "ReviewRequest": "coar-notify:ReviewRequest",
+    "ReviewSuccess": "coar-notify:ReviewSuccess",
+    "ReviewFailure": "coar-notify:ReviewFailure",
+
+    "ietf:cite-as": {
+        "@type" : "@id"
+    },
+
+    "coar-notify:reviews" : {
+        "@type" : "@id"
+    },
+    "coar-notify:endorses" : {
+          "@type" : "@id"
+    }
+  }
+}

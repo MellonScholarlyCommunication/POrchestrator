@@ -5,10 +5,19 @@ import { JsonLdProcessor } from 'jsonld';
 import { json } from 'stream/consumers';
 
 async function quadsToJson(inputFile: string, topId: string) {
+    // Inline the contexts to disable network access 
+    const asContextStr = 
+                fs.readFileSync('context/activitystreams.jsonld','utf-8');
+    const notifyContextStr = 
+                fs.readFileSync('context/activitystreams.jsonld','utf-8');
+
+    const asContext     = JSON.parse(asContextStr);
+    const notifyContext = JSON.parse(notifyContextStr);
+
     const frame   = {
         "@context" : [
-             "https://www.w3.org/ns/activitystreams",
-             "http://purl.org/coar/notify"
+             asContext['@context'],
+             notifyContext['@context']
         ] ,
         "id": topId
     };
@@ -19,7 +28,13 @@ async function quadsToJson(inputFile: string, topId: string) {
 
     const json = await jsonld.frame(ld,frame);
 
-    return JSON.stringify(json);
+    // Set the public context urls
+    json['@context'] = [
+        "https://www.w3.org/ns/activitystreams",
+        "http://purl.org/coar/notify"
+    ];
+
+    return JSON.stringify(json,null,2);
 }
 
 const args = process.argv.slice(2);

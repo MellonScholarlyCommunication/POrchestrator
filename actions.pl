@@ -29,14 +29,14 @@ policy_param(Graph,Policy,Arg,Result) :-
 'http://example.org/appendToLog'(Graph,Policy) :-
     print_message(informational,action('appendToLog',Policy)),
 
-    policy_param(Graph,Policy,"ex:log",NewGraph),
+    policy_param(Graph,Policy,"ex:log",OutputGraph),
     
     gen_id(Id),
 
     gen_file('appendToLog',Id,File),
 
     open(File,write,Stream),
-    rdf2turtle(Stream,NewGraph),
+    rdf2turtle(Stream,OutputGraph),
     close(Stream).
 
 'http://example.org/sendNotification'(Graph,Policy) :-
