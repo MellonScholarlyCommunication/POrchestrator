@@ -1,5 +1,3 @@
 data/*.n3
 bin/*.js
-output/appendToLog
-output/sendNotification
 node_modules
