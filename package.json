@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "jsonld": "^5.2.0",
+    "n3": "^1.11.1"
+  },
+  "devDependencies": {
+    "@types/jsonld": "^1.5.6",
+    "@types/n3": "^1.10.3",
+    "@types/node": "^16.7.6"
+  }
+}
