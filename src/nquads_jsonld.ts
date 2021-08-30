@@ -32,6 +32,6 @@ if (args.length != 2 ) {
 const inputFile = args[0];
 const topId     = args[1];
 
-quadsToJson(inputFile,topId).then((result) => {
+quadsToJson(inputFile == "-" ? '/dev/stdin' : inputFile,topId).then((result) => {
     console.log(result);
 });

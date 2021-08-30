@@ -19,6 +19,6 @@ if (args.length == 0) {
 
 const inputFile = args[0];
 
-jsonToQuads(inputFile).then((result) => {
+jsonToQuads(inputFile == '-' ? '/dev/stdin' : inputFile).then((result) => {
     console.log(result);
 });
