@@ -1,6 +1,7 @@
 # Add to the EventLog
 
 PREFIX ex:   <http://example.org/>
+PREFIX coar: <http://purl.org/coar/notify_vocabulary/>
 PREFIX as:   <https://www.w3.org/ns/activitystreams#>
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX pol:  <https://www.example.org/ns/policy#>
@@ -8,8 +9,8 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  ?s a ?class .
-  ?class list:in (as:Offer) .
+  ?s a as:Offer .
+  ?s a coar:ReviewRequest .
 
   ?s as:origin ?origin .
   ?s as:target ?target .
@@ -21,7 +22,9 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
       fno:executes ex:sendNotification ;
       ex:notification [
         a as:Accept ;
+        a coar:ReviewRequest ;
         as:inReplyTo ?s ;
+        as:object ?s ;
         as:target ?origin ;
         as:origin ?target  
       ]

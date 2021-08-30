@@ -33,7 +33,7 @@ policy_param(Graph,Policy,Arg,Result) :-
     
     gen_id(Id),
 
-    gen_file('appendToLog',Id,File),
+    gen_file('appendToLog','demo.jsonld',File),
 
     open(File,write,Stream),
     rdf2turtle(Stream,OutputGraph),
@@ -56,11 +56,17 @@ policy_param(Graph,Policy,Arg,Result) :-
     % Set the URI as subject of the new graph
     fix_subject(NewGraph,BlankNode,UriNode,OutputGraph),
 
-    gen_file('sendNotification',Id,File),
+    gen_file('sendNotification','demo.jsonld',File),
 
     open(File,write,Stream),
     rdf2jsonld(Stream,OutputGraph,UriNode),
-    close(Stream).
+    close(Stream),
+
+    gen_file('sendNotification','demo.n3',File2),
+
+    open(File2,write,Stream2),
+    rdf2ntriples(Stream2,OutputGraph),
+    close(Stream2). 
 
 % execute the action
 action(Graph,Policy,Func) :-

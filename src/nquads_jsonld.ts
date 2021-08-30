@@ -19,7 +19,10 @@ async function quadsToJson(inputFile: string, topId: string) {
              asContext['@context'],
              notifyContext['@context']
         ] ,
-        "id": topId
+        "id": topId , 
+        "inReplyTo": {
+            "@embed": "@never"
+        }
     };
 
     const nquadStr  = fs.readFileSync(inputFile,'utf-8');

@@ -34,6 +34,6 @@
       ]
     },
     "type": [
-      "Offer"
+      "Offer" , "coar-notify:ReviewRequest"
     ]
   }

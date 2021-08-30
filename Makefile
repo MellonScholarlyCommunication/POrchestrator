@@ -19,5 +19,7 @@ cache:
 compile:
 	tsc
 
+eyetest:
+	eye --pass --quiet --nope data/coar_offer.n3 rules/*
 watch:
 	tsc -w
