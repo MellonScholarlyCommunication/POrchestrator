@@ -59,7 +59,7 @@ policy_param(Graph,Policy,Arg,Result) :-
     gen_file('sendNotification',Id,File),
 
     open(File,write,Stream),
-    rdf2turtle(Stream,OutputGraph),
+    rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream).
 
 % execute the action

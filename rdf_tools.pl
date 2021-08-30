@@ -4,6 +4,8 @@
       rdf_walk/3,
       string_uri/2,
       rdf2turtle/2,
+      rdf2ntriples/2,
+      rdf2jsonld/3,
       fix_subject/4
 ]).
 
@@ -30,14 +32,39 @@ string_uri(String,URI) :-
 triple_in(RDF,S,P,O,_G) :-
       member(rdf(S,P,O), RDF).
 
-% print a graph to a stream
-rdf2turtle(_,[]).
+% serialize a graph to JSON
+%  - we need a third Id argument to guarantee a COAR compatible serialization
+rdf2jsonld(Stream,Graph,Id) :-
+    setup_call_cleanup(
+      process_create(
+          "/usr/local/bin/node", [ "bin/nquads_jsonld.js" , "-" , Id ] ,
+          [ stdin(pipe(In)) , stdout(stream(Stream)) ]
+      ),
+      rdf2ntriples(In,Graph),
+      close(In)
+    ).
+
+% write a graph to a stream as turtle
 rdf2turtle(Stream,Graph) :-
     rdf_save_turtle(
             Stream,[
               expand(triple_in(Graph)),
               inline_bnodes(true) ,
               silent(true)
+            ]).
+
+rdf2ntriples(Stream,Graph) :-
+    rdf_save_turtle(
+            Stream,[
+              comment(false),
+              encoding(utf8),
+              expand(triple_in(Graph)),
+              group(false),
+              prefixes([]),
+              subject_white_lines(0),
+              a(false),
+              inline_bnodes(false) ,
+              abbreviate_literals(false)
             ]).
 
 % rdf_match(+Graph,+Triple)
