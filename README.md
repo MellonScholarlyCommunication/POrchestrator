@@ -8,7 +8,7 @@ Keeping it simple for now.
 # Required
 
 - [EYE](http://eulersharp.sourceforge.net)
-- Groovy - `brew install groovy`
+- Node
 
 # Usage
 
