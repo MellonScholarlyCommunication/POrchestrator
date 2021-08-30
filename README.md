@@ -14,6 +14,7 @@ Keeping it simple for now.
 # Usage
 
 ```
-make all
+make data
+make compile
 ./orchestrator.pl data/FILE.n3 rules/*
 ```
