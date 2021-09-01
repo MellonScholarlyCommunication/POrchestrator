@@ -15,18 +15,26 @@ cfg(outputDir,"./output").
 % path to eye reaseoner
 cfg(eye,"/usr/local/bin/eye").
 
+% path to node
+cfg(node,"/usr/local/bin/node").
+
 % start reasoning on the input file and capture the output
 n3_reasoning(File,Rules,Output) :-
-    cfg(eye,Path),
-    flatten(
-      [ '--pass' , '--nope' , '--quiet' ,
-        file(File) , Rules ] ,
-      Args
-    ),
+    cfg(eye,Eye),
+    cfg(node,Node),
+
+    atomics_to_string(Rules," ",RulesStr),
+    
+    % convert JSON-LD to triples , process the triples with EYE with all 
+    % rules provided to the orchestrator
+    format(atom(Exec),
+      '~w bin/jsonld_nquads.js ~w | ~w --pass --nope --quiet - ~w',
+      [Node,File,Eye,RulesStr]),
+
     concat_atom(['__','#'], AnonBase),
     setup_call_cleanup(
       process_create(
-          Path, Args ,
+          path(bash), ['-c', Exec] ,
           [ stdout(pipe(Out)) , stderr(null) ]
       ),
       rdf_read_turtle(Out,Output,[anon_prefix(AnonBase)]),
@@ -48,7 +56,7 @@ execute_policy(Graph,rdf(_,_,Policy)) :-
     action(Graph,Policy,Func).
 
 main([]) :-
-    writeln(user_error,"usage: orchestrator.pl data/N3 RULES").
+    writeln(user_error,"usage: orchestrator.pl data/JSON-LD RULES").
 
 main([File|Rules]) :-
     print_message(informational,reason_about(File,Rules)),
