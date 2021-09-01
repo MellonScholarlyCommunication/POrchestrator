@@ -5,8 +5,6 @@
 :- use_module(rdf_tools).
 :- use_module(library(uuid)).
 
-cfg(outputDir,"./output").
-
 % Generate a UUID
 gen_id(Id) :-
     uuid(Id).
@@ -16,8 +14,8 @@ gen_file(Func,Id,File) :-
     cfg(outputDir,Dir),
     swritef(File,'%w/%w/%w',[Dir,Func,Id]).
 
-% Read the Arg valid from the policy in the Graph
-policy_param(Graph,Policy,Arg,Result) :-
+% Given a Graph and a Policy URI, read the Arg as a subGraph
+policy_arg_as_graph(Graph,Policy,Arg,Result) :-
     string_uri(Arg,ArgUri),
     rdf_match(Graph,rdf(Policy,ArgUri,Params)),
     findall(
@@ -26,24 +24,35 @@ policy_param(Graph,Policy,Arg,Result) :-
         Parts),
     flatten(Parts,Result).
 
+% Given a Graph and a Policy URI, read the Arg as a subGraph
+policy_arg(Graph,Policy,Arg,Result) :-
+    string_uri(Arg,ArgUri),
+    rdf_match(Graph,rdf(Policy,ArgUri,Result)).
+
 'http://example.org/appendToLog'(Graph,Policy) :-
     print_message(informational,action('appendToLog',Policy)),
 
-    policy_param(Graph,Policy,"ex:log",OutputGraph),
-    
-    % gen_id(Id),
+    policy_arg(Graph,Policy,"ex:notification",UriNode),
 
+    policy_arg_as_graph(Graph,Policy,"ex:notification",OutputGraph),
+    
     gen_file('appendToLog','demo.jsonld',File),
 
     open(File,write,Stream),
-    rdf2turtle(Stream,OutputGraph),
-    close(Stream).
+    rdf2jsonld(Stream,OutputGraph,UriNode),
+    close(Stream),
+
+    gen_file('appendToLog','demo.n3',File2),
+
+    open(File2,write,Stream2),
+    rdf2ntriples(Stream2,OutputGraph),
+    close(Stream2).  
 
 'http://example.org/sendNotification'(Graph,Policy) :-
     print_message(informational,action('sendNotificAtion',Policy)),
 
     % Read out the notification   
-    policy_param(Graph,Policy,"ex:notification",NewGraph), 
+    policy_arg_as_graph(Graph,Policy,"ex:notification",NewGraph), 
 
     % Find the current (blank) node of the notification
     string_uri("rdf:type",Type),

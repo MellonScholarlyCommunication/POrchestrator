@@ -9,12 +9,15 @@
 
 :- initialization(main,main).
 
+% output directory
+cfg(outputDir,"./output").
+
 % path to eye reaseoner
-eye("/usr/local/bin/eye").
+cfg(eye,"/usr/local/bin/eye").
 
 % start reasoning on the input file and capture the output
 n3_reasoning(File,Rules,Output) :-
-    eye(Path),
+    cfg(eye,Path),
     flatten(
       [ '--pass' , '--nope' , '--quiet' ,
         file(File) , Rules ] ,
