@@ -31,7 +31,7 @@ policy_param(Graph,Policy,Arg,Result) :-
 
     policy_param(Graph,Policy,"ex:log",OutputGraph),
     
-    gen_id(Id),
+    % gen_id(Id),
 
     gen_file('appendToLog','demo.jsonld',File),
 

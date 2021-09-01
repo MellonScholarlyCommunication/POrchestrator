@@ -19,7 +19,11 @@ cache:
 compile:
 	tsc
 
-eyetest:
-	eye --pass --quiet --nope data/coar_offer.n3 rules/*
 watch:
 	tsc -w
+
+eyetest:
+	eye --pass --quiet --nope data/coar_offer.n3 rules/*
+
+orchestrate:
+	 prolog/orchestrator.pl data/coar_offer.n3 rules/*
