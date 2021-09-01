@@ -14,7 +14,8 @@ Keeping it simple for now.
 # Usage
 
 ```
-make data
 make compile
-./orchestrator.pl data/FILE.n3 rules/*
+prolog/orchestrator.pl data/FILE.jsonld rules/*
 ```
+
+Check the `output` directory for JSON-LD that is processed by the rule engine.
