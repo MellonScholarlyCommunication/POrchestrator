@@ -36,7 +36,8 @@ policy_arg(Graph,Policy,Arg,Result) :-
 
     policy_arg_as_graph(Graph,Policy,"ex:notification",OutputGraph),
     
-    gen_file('appendToLog','demo.jsonld',File),
+    gen_id(Id),
+    gen_file('appendToLog',Id,File),
 
     open(File,write,Stream),
     rdf2jsonld(Stream,OutputGraph,UriNode),
@@ -61,7 +62,7 @@ policy_arg(Graph,Policy,Arg,Result) :-
     % Set the URI as subject of the new graph
     fix_subject(NewGraph,BlankNode,UriNode,OutputGraph),
 
-    gen_file('sendNotification','demo.jsonld',File),
+    gen_file('sendNotification',Id,File),
 
     open(File,write,Stream),
     rdf2jsonld(Stream,OutputGraph,UriNode),
