@@ -8,16 +8,15 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  # SCOPE this the subject of the input document 
-  # use it as the top level notification identifier
-  ?SCOPE a ?class .
-  ?class list:in (as:Announce as:Offer) .
+  ?id a ex:TopGraph .
+  ?id a ?class .
+  ?class list:in (as:Accept as:Announce as:Offer) .
 }
 =>
 {
   [ pol:policy [
       a fno:Execution ;
       fno:executes ex:appendToLog ;
-      ex:notification ?SCOPE
+      ex:notification ?id
   ] ]
 }.

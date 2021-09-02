@@ -6,16 +6,14 @@ PREFIX as:   <https://www.w3.org/ns/activitystreams#>
 PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX pol:  <https://www.example.org/ns/policy#>
 PREFIX fno:  <https://w3id.org/function/ontology#>
-PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  # SCOPE this the subject of the input document 
-  # use it as the top level notification identifier
-  ?SCOPE a as:Offer .
-  ?SCOPE a coar:ReviewRequest .
+  ?id a ex:TopGraph .
+  ?id a as:Offer .
+  ?id a coar:ReviewRequest .
 
-  ?SCOPE as:origin ?origin .
-  ?SCOPE as:target ?target .
+  ?id as:origin ?origin .
+  ?id as:target ?target .
 }
 =>
 {
@@ -25,8 +23,8 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
       ex:notification [
         a as:Accept ;
         a coar:ReviewRequest ;
-        as:inReplyTo ?SCOPE ;
-        as:object ?SCOPE ;
+        as:inReplyTo ?id ;
+        as:object ?id ;
         as:target ?origin ;
         as:origin ?target  
       ]

@@ -1,0 +1,50 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "http://purl.org/coar/notify"
+  ],
+  "id": "urn:uuid:89a912ff-1594-4b76-2a77-c20f983b4f9c",
+  "type": [
+    "ReviewRequest",
+    "Accept"
+  ],
+  "inReplyTo": "urn:uuid:0370c0fb-bb78-4a9b-87f5-bed307a509dd",
+  "object": {
+    "id": "urn:uuid:0370c0fb-bb78-4a9b-87f5-bed307a509dd",
+    "type": [
+      "ReviewRequest",
+      "Offer"
+    ],
+    "actor": {
+      "id": "https://orcid.org/0000-0002-1825-0097",
+      "type": "Person",
+      "inbox": "https://josiahcarberry.com/ldn/inbox",
+      "name": "Josiah Carberry"
+    },
+    "object": {
+      "id": "https://origin-system.org/resources/0021",
+      "type": "Document",
+      "ietf:cite-as": "https://doi.org/10.4598/12123487"
+    },
+    "origin": {
+      "id": "http://157.193.231.95",
+      "type": "Service",
+      "inbox": "http://157.193.231.95/inbox"
+    },
+    "target": {
+      "id": "https://target-system.org",
+      "type": "Service",
+      "inbox": "https://target-system.org/inbox/"
+    }
+  },
+  "origin": {
+    "id": "https://target-system.org",
+    "type": "Service",
+    "inbox": "https://target-system.org/inbox/"
+  },
+  "target": {
+    "id": "http://157.193.231.95",
+    "type": "Service",
+    "inbox": "http://157.193.231.95/inbox"
+  }
+}
