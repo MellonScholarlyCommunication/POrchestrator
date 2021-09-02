@@ -22,6 +22,12 @@ async function quadsToJson(inputFile: string, topId: string) {
         "id": topId , 
         "inReplyTo": {
             "@embed": "@never"
+        },
+        "origin": {
+            "@embed": "@always"
+        },
+        "target": {
+            "@embed": "@always"
         }
     };
 
