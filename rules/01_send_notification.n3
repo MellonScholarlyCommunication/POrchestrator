@@ -1,4 +1,4 @@
-# Add to the EventLog
+# Send an Accept when we get an offer for a review
 
 PREFIX ex:   <http://example.org/>
 PREFIX coar: <http://purl.org/coar/notify_vocabulary/>
