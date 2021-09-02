@@ -8,7 +8,9 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  ?s a ?class .
+  # SCOPE this the subject of the input document 
+  # use it as the top level notification identifier
+  ?SCOPE a ?class .
   ?class list:in (as:Announce as:Offer) .
 }
 =>
@@ -16,6 +18,6 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
   [ pol:policy [
       a fno:Execution ;
       fno:executes ex:appendToLog ;
-      ex:notification ?s
+      ex:notification ?SCOPE
   ] ]
 }.

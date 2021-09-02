@@ -9,11 +9,13 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  ?s a as:Offer .
-  ?s a coar:ReviewRequest .
+  # SCOPE this the subject of the input document 
+  # use it as the top level notification identifier
+  ?SCOPE a as:Offer .
+  ?SCOPE a coar:ReviewRequest .
 
-  ?s as:origin ?origin .
-  ?s as:target ?target .
+  ?SCOPE as:origin ?origin .
+  ?SCOPE as:target ?target .
 }
 =>
 {
@@ -23,8 +25,8 @@ PREFIX list: <http://www.w3.org/2000/10/swap/list#>
       ex:notification [
         a as:Accept ;
         a coar:ReviewRequest ;
-        as:inReplyTo ?s ;
-        as:object ?s ;
+        as:inReplyTo ?SCOPE ;
+        as:object ?SCOPE ;
         as:target ?origin ;
         as:origin ?target  
       ]
