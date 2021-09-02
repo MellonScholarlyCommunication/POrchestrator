@@ -9,7 +9,7 @@ async function quadsToJson(inputFile: string, topId: string) {
     const asContextStr = 
                 fs.readFileSync('context/activitystreams.jsonld','utf-8');
     const notifyContextStr = 
-                fs.readFileSync('context/activitystreams.jsonld','utf-8');
+                fs.readFileSync('context/notify.jsonld','utf-8');
 
     const asContext     = JSON.parse(asContextStr);
     const notifyContext = JSON.parse(notifyContextStr);

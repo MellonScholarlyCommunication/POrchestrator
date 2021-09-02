@@ -16,5 +16,5 @@ watch:
 eyetest:
 	eye --pass --quiet --nope data/coar_offer.n3 rules/*
 
-orchestrate:
+demo:
 	 prolog/orchestrator.pl data/coar_offer.jsonld rules/*
