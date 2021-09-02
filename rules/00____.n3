@@ -1,5 +1,5 @@
 # Some logic to decide what is the main notification identifier
-# It is that part that is a "Class" and not the subject of something else
+# It is that part that is a "Class" not the subject of something else
 
 PREFIX ex:   <http://example.org/>
 PREFIX coar: <http://purl.org/coar/notify_vocabulary/>
@@ -16,7 +16,7 @@ PREFIX log:  <http://www.w3.org/2000/10/swap/log#>
 }
 => 
 {
-    ?id a ex:SubGraph .
+    [ ex:SubGraph ?id ].
 }.
 
 {
@@ -26,5 +26,5 @@ PREFIX log:  <http://www.w3.org/2000/10/swap/log#>
 }
 => 
 {
-    ?id a ex:TopGraph .
+    [ ex:TopGraph ?id ].
 }.

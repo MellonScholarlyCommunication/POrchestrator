@@ -8,7 +8,7 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 PREFIX list: <http://www.w3.org/2000/10/swap/list#>
 
 {
-  ?id a ex:TopGraph .
+  [ ex:TopGraph ?id ] .
   ?id a ?class .
   ?class list:in (as:Accept as:Announce as:Offer) .
 }

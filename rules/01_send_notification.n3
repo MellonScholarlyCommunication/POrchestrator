@@ -8,7 +8,7 @@ PREFIX pol:  <https://www.example.org/ns/policy#>
 PREFIX fno:  <https://w3id.org/function/ontology#>
 
 {
-  ?id a ex:TopGraph .
+  [ ex:TopGraph ?id ] .
   ?id a as:Offer .
   ?id a coar:ReviewRequest .
 
