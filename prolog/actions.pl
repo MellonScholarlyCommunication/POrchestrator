@@ -42,11 +42,7 @@ policy_arg(Graph,Policy,Arg,Result) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    gen_file('appendToLog','demo.n3',File2),
-
-    open(File2,write,Stream2),
-    rdf2ntriples(Stream2,OutputGraph),
-    close(Stream2).  
+    format("http://example.org/appendToLog;~w~n",File).
 
 'http://example.org/sendNotification'(Graph,Policy) :-
     print_message(informational,action('sendNotificAtion',Policy)),
@@ -71,11 +67,7 @@ policy_arg(Graph,Policy,Arg,Result) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    gen_file('sendNotification','demo.n3',File2),
-
-    open(File2,write,Stream2),
-    rdf2ntriples(Stream2,OutputGraph),
-    close(Stream2). 
+    format("http://example.org/sendNotification;~w~n",File).
 
 % execute the action
 action(Graph,Policy,Func) :-

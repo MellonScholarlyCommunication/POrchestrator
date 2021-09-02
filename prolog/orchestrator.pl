@@ -35,7 +35,7 @@ n3_reasoning(File,Rules,Output) :-
     setup_call_cleanup(
       process_create(
           path(bash), ['-c', Exec] ,
-          [ stdout(pipe(Out)) , stderr(null) ]
+          [ stdout(pipe(Out)) ]
       ),
       rdf_read_turtle(Out,Output,[anon_prefix(AnonBase)]),
       close(Out)
