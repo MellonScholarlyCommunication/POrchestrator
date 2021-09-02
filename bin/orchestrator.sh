@@ -2,4 +2,6 @@
 
 PROJDIR=$(dirname $0)
 
-${PROJDIR}/../prolog/orchestrator.pl -- "$@"
+cd ${PROJDIR}/..
+
+./prolog/orchestrator.pl -- "$@"
