@@ -2,7 +2,7 @@
 
 An Mellon orchestrator component in Prolog. 
 
-Probably this can whole be written as an EYE plugin. 
+Probably all this code could written as an EYE plugin...
 Keeping it simple for now.
 
 # Required
