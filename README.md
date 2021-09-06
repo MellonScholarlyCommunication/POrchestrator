@@ -9,13 +9,22 @@ Keeping it simple for now.
 
 - [EYE](http://eulersharp.sourceforge.net)
 - [SWIPL](https://www.swi-prolog.org)
-- Node
+- [Node](https://nodejs.org/en/)
+- Typescript - `npm install -g typescipt`
+
+# Install
+
+```
+npm install
+swipl -t 'pack_install(uuid)'
+swipl -t 'pack_install(list_util)'
+make compile
+```
 
 # Usage
 
 ```
-make compile
-prolog/orchestrator.pl data/FILE.jsonld rules/*
+bin/orchestrator.sh data/coar_offer.jsonld rules/*
 ```
 
 Check the `output` directory for JSON-LD that is processed by the rule engine.
