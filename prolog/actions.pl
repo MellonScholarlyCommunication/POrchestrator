@@ -29,6 +29,23 @@ policy_arg(Graph,Policy,Arg,Result) :-
     string_uri(Arg,ArgUri),
     rdf_match(Graph,rdf(Policy,ArgUri,Result)).
 
+% Create a new identifier if the notification contains a blank node
+fix_notification_blanks(NodeIRI,Graph,UriNode,NewGraph) :-
+    % blank node test
+    sub_atom(NodeIRI, 0, _, _, "__"), 
+
+    gen_id(Id),
+    
+    atom_concat('urn:uuid:',Id,UriNode),
+    
+    % Set the URI as subject of the new graph
+    fix_subject(Graph,NodeIRI,UriNode,NewGraph).
+
+% Don't create a new identifier if the notification contains no blank node
+fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
+    % blank node test
+    \+ sub_atom(NodeIRI, 0, _, _, "__").
+
 'http://example.org/appendToLog'(Graph,Policy) :-
     print_message(informational,action('appendToLog',Policy)),
 
@@ -53,15 +70,11 @@ policy_arg(Graph,Policy,Arg,Result) :-
 
     % Find the current (blank) node of the notification
     string_uri("rdf:type",Type),
-    rdf_match(NewGraph,rdf(BlankNode,Type,_)),
+    rdf_match(NewGraph,rdf(NodeIRI,Type,_)),
 
-    % Create a new URI for the current (blank) node
+    fix_notification_blanks(NodeIRI,NewGraph,UriNode,OutputGraph) ,
+
     gen_id(Id),
-    atom_concat('urn:uuid:',Id,UriNode),
-    
-    % Set the URI as subject of the new graph
-    fix_subject(NewGraph,BlankNode,UriNode,OutputGraph),
-
     gen_file('sendNotification',Id,File),
 
     open(File,write,Stream),
