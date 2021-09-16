@@ -15,7 +15,7 @@
 % prefixes
 pfx('pol','https://www.example.org/ns/policy#').
 pfx('fno','https://w3id.org/function/ontology#').
-pfx('ex','http://example.org/').
+pfx('ex','https://www.example.org/').
 pfx('as','https://www.w3.org/ns/activitystreams#').
 pfx('rdf','http://www.w3.org/1999/02/22-rdf-syntax-ns#').
 

@@ -46,7 +46,7 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     % blank node test
     \+ sub_atom(NodeIRI, 0, _, _, "__").
 
-'http://example.org/appendToLog'(Graph,Policy) :-
+'https://www.example.org/appendToLog'(Graph,Policy) :-
     print_message(informational,action('appendToLog',Policy)),
 
     policy_arg(Graph,Policy,"ex:notification",UriNode),
@@ -60,9 +60,9 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    format("http://example.org/appendToLog;~w~n",File).
+    format("https://www.example.org/appendToLog;~w~n",File).
 
-'http://example.org/sendNotification'(Graph,Policy) :-
+'https://wwww.example.org/sendNotification'(Graph,Policy) :-
     print_message(informational,action('sendNotificAtion',Policy)),
 
     % Read out the notification   
@@ -81,7 +81,7 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    format("http://example.org/sendNotification;~w~n",File).
+    format("https://www.example.org/sendNotification;~w~n",File).
 
 % execute the action
 action(Graph,Policy,Func) :-
