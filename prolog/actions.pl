@@ -4,6 +4,7 @@
 
 :- use_module(rdf_tools).
 :- use_module(library(uuid)).
+:- use_module(library(http/json)).
 
 % Generate a UUID
 gen_id(Id) :-
@@ -60,19 +61,23 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    format("https://www.example.org/appendToLog;~w~n",File).
+    json_write(current_output,_{
+        id: "https://www.example.org/appendToLog" ,
+        notification: File
+    },[width(0)]) ,
+    writeln('').
 
 'https://www.example.org/sendNotification'(Graph,Policy) :-
     print_message(informational,action('sendNotificAtion',Policy)),
 
-    % Read out the notification   
-    policy_arg_as_graph(Graph,Policy,"ex:notification",NewGraph), 
+    % ex:notification graph
+    policy_arg_as_graph(Graph,Policy,"ex:notification",Notification), 
 
     % Find the current (blank) node of the notification
     string_uri("rdf:type",Type),
-    rdf_match(NewGraph,rdf(NodeIRI,Type,_)),
+    rdf_match(Notification,rdf(NodeIRI,Type,_)),
 
-    fix_notification_blanks(NodeIRI,NewGraph,UriNode,OutputGraph) ,
+    fix_notification_blanks(NodeIRI,Notification,UriNode,OutputGraph) ,
 
     gen_id(Id),
     gen_file('sendNotification',Id,File),
@@ -81,7 +86,11 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    format("https://www.example.org/sendNotification;~w~n",File).
+    json_write(current_output,_{
+        id: "https://www.example.org/sendNotification" ,
+        notification: File
+    },[width(0)]) ,
+    writeln('').
 
 % execute the action
 action(Graph,Policy,Func) :-

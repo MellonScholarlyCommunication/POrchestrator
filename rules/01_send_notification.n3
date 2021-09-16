@@ -26,7 +26,7 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
         as:inReplyTo ?id ;
         as:object ?id ;
         as:target ?origin ;
-        as:origin ?target  
+        as:origin ?target ; 
       ]
     ]
   ].
