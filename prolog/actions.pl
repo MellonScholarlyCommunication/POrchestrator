@@ -62,7 +62,7 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
 
     format("https://www.example.org/appendToLog;~w~n",File).
 
-'https://wwww.example.org/sendNotification'(Graph,Policy) :-
+'https://www.example.org/sendNotification'(Graph,Policy) :-
     print_message(informational,action('sendNotificAtion',Policy)),
 
     % Read out the notification   
