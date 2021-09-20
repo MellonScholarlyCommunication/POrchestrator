@@ -68,7 +68,7 @@ sendNotification(Graph,Policy,Name) :-
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
-    string_concat("http://www.example.org/",Name,ActionUri),
+    string_concat("https://www.example.org/",Name,ActionUri),
 
     json_write(current_output,_{
         id: ActionUri ,
