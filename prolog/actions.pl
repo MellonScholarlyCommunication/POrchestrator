@@ -47,28 +47,10 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     % blank node test
     \+ sub_atom(NodeIRI, 0, _, _, "__").
 
-'https://www.example.org/appendToLog'(Graph,Policy) :-
-    print_message(informational,action('appendToLog',Policy)),
-
-    policy_arg(Graph,Policy,"ex:notification",UriNode),
-
-    policy_arg_as_graph(Graph,Policy,"ex:notification",OutputGraph),
-    
-    gen_id(Id),
-    gen_file('appendToLog',Id,File),
-
-    open(File,write,Stream),
-    rdf2jsonld(Stream,OutputGraph,UriNode),
-    close(Stream),
-
-    json_write(current_output,_{
-        id: "https://www.example.org/appendToLog" ,
-        notification: File
-    },[width(0)]) ,
-    writeln('').
-
-'https://www.example.org/sendNotification'(Graph,Policy) :-
-    print_message(informational,action('sendNotificAtion',Policy)),
+% SendNotification fills in blank nodes for graph subjects and creates
+% a JSON-LD output file
+sendNotification(Graph,Policy,Name) :-
+    print_message(informational,action(Name,Policy)),
 
     % ex:notification graph
     policy_arg_as_graph(Graph,Policy,"ex:notification",Notification), 
@@ -80,17 +62,28 @@ fix_notification_blanks(NodeIRI,Graph,NodeIRI,Graph) :-
     fix_notification_blanks(NodeIRI,Notification,UriNode,OutputGraph) ,
 
     gen_id(Id),
-    gen_file('sendNotification',Id,File),
+    gen_file(Name,Id,File),
 
     open(File,write,Stream),
     rdf2jsonld(Stream,OutputGraph,UriNode),
     close(Stream),
 
+    string_concat("http://www.example.org/",Name,ActionUri),
+
     json_write(current_output,_{
-        id: "https://www.example.org/sendNotification" ,
+        id: ActionUri ,
         notification: File
     },[width(0)]) ,
     writeln('').
+
+'https://www.example.org/sendEventLog'(Graph,Policy) :-
+    sendNotification(Graph,Policy,"sendEventLog").
+
+'https://www.example.org/sendOutbox'(Graph,Policy) :-
+    sendNotification(Graph,Policy,"sendOutbox").
+
+'https://www.example.org/sendInbox'(Graph,Policy) :-
+    sendNotification(Graph,Policy,"sendInbox").
 
 % execute the action
 action(Graph,Policy,Func) :-
