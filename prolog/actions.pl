@@ -79,11 +79,11 @@ sendNotification(Graph,Policy,Name) :-
 'https://www.example.org/sendEventLog'(Graph,Policy) :-
     sendNotification(Graph,Policy,"sendEventLog").
 
-'https://www.example.org/sendOutbox'(Graph,Policy) :-
-    sendNotification(Graph,Policy,"sendOutbox").
+'https://www.example.org/sendTarget'(Graph,Policy) :-
+    sendNotification(Graph,Policy,"sendTarget").
 
-'https://www.example.org/sendInbox'(Graph,Policy) :-
-    sendNotification(Graph,Policy,"sendInbox").
+'https://www.example.org/sendOrigin'(Graph,Policy) :-
+    sendNotification(Graph,Policy,"sendOrigin").
 
 % execute the action
 action(Graph,Policy,Func) :-
