@@ -16,6 +16,7 @@ function inlineContext(directory:string , json: any) {
     const files = fs.readdirSync(directory);
 
     files.forEach( file => {
+
             if (! file.match(/\.jsonld$/)) {
                 return;
             }
@@ -23,26 +24,16 @@ function inlineContext(directory:string , json: any) {
             const contextStr = fs.readFileSync(`${directory}/${file}`,'utf-8');
             const context = JSON.parse(contextStr);
 
-            json['@context'].push = context['@context'];
+            json['@context'].push(context['@context']);
     });
 
     return json;
 }
 
 async function quadsToJson(inputFile: string, topId: string) {
-    // Inline the contexts to disable network access 
-    const asContextStr = 
-                fs.readFileSync('context/activitystreams.jsonld','utf-8');
-    const notifyContextStr = 
-                fs.readFileSync('context/notify.jsonld','utf-8');
-
-    const asContext     = JSON.parse(asContextStr);
-    const notifyContext = JSON.parse(notifyContextStr);
-
-    const frame   = {
+    let frame   = {
         "@context" : [
-             asContext['@context'],
-             notifyContext['@context']
+            { "ex" : "https://www.example.org/" }
         ] ,
         "id": topId , 
         "inReplyTo": {
@@ -56,6 +47,11 @@ async function quadsToJson(inputFile: string, topId: string) {
         }
     };
 
+    // Inline the contexts to disable network access 
+    frame = inlineContext('context', frame);
+
+    console.log(JSON.stringify(frame));
+
     const nquadStr  = fs.readFileSync(inputFile,'utf-8');
     
     const ld = await jsonld.fromRDF(nquadStr,{ format:'application/n-quads'});
@@ -65,7 +61,8 @@ async function quadsToJson(inputFile: string, topId: string) {
     // Set the public context urls
     json['@context'] = [
         "https://www.w3.org/ns/activitystreams",
-        "http://purl.org/coar/notify"
+        "http://purl.org/coar/notify" ,
+        { "ex" : "https://www.example.org/"  }
     ];
 
     return JSON.stringify(json,null,2);
