@@ -1,24 +1,46 @@
 import * as jsonld from 'jsonld';
 import fs from 'fs';
 
+function inlineContext(directory:string , json: any) {
+    if (! json['@context']) {
+        json['@context'] = [];
+    }
+
+    if (typeof json['@context'] === 'string') {
+        json['@context'] = [ json['@context'] ];
+    }
+
+    const files = fs.readdirSync(directory);
+
+    files.forEach( file => {
+            if (! file.match(/\.jsonld$/)) {
+                return;
+            }
+
+            const name = file.replace(/\.jsonld/,'');
+
+            const contextStr = fs.readFileSync(`${directory}/${file}`,'utf-8');
+            const context = JSON.parse(contextStr);
+
+            json['@context'] = json['@context'].map( (item:any) => {
+                if (typeof item === 'string' && item.indexOf(name) >= 0) {
+                    return context['@context']; 
+                }
+                else {
+                    return item;
+                }
+            });
+    });
+
+    return json;
+}
+
 async function jsonToQuads(inputFile: string) {
-    // Inline the contexts to disable network access 
-    const asContextStr = 
-        fs.readFileSync('context/activitystreams.jsonld','utf-8');
-    const notifyContextStr = 
-        fs.readFileSync('context/notify.jsonld','utf-8');
-
-    const asContext     = JSON.parse(asContextStr);
-    const notifyContext = JSON.parse(notifyContextStr);
-
     const jsonStr = fs.readFileSync(inputFile,'utf-8');
-    const json    = JSON.parse(jsonStr);
+    let   json    = JSON.parse(jsonStr);
 
-    json['@context'] = [
-        asContext['@context'],
-        notifyContext['@context']
-    ];
-    
+    json = inlineContext('context',json);
+
     const nquads  = await jsonld.toRDF(json, {format: 'application/n-quads'});
 
     return nquads;

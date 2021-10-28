@@ -4,6 +4,31 @@ import fs from 'fs';
 import { JsonLdProcessor } from 'jsonld';
 import { json } from 'stream/consumers';
 
+function inlineContext(directory:string , json: any) {
+    if (! json['@context']) {
+        json['@context'] = [];
+    }
+
+    if (typeof json['@context'] === 'string') {
+        json['@context'] = [ json['@context'] ];
+    }
+
+    const files = fs.readdirSync(directory);
+
+    files.forEach( file => {
+            if (! file.match(/\.jsonld$/)) {
+                return;
+            }
+
+            const contextStr = fs.readFileSync(`${directory}/${file}`,'utf-8');
+            const context = JSON.parse(contextStr);
+
+            json['@context'].push = context['@context'];
+    });
+
+    return json;
+}
+
 async function quadsToJson(inputFile: string, topId: string) {
     // Inline the contexts to disable network access 
     const asContextStr = 

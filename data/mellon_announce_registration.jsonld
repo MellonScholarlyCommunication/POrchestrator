@@ -1,0 +1,31 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "http://purl.org/coar/notify" , {
+        "ex":"https://www.example.org/"
+    }
+  ],
+  "id": "urn:uuid:a27752d2-716a-4f8c-84d3-e498a724f9fc",
+  "type": ["Announce","ex:RegistrationAction" ],
+  "actor": {
+    "id": "https://hochstenbach.solidcommunity.net/registrator/profile/service.ttl#me",
+    "type": "http://xmlns.com/foaf/0.1/Service",
+    "inbox": "https://hochstenbach.solidcommunity.net/registrator/inbox/"
+  },
+  "context": "https://bellow2.ugent.be/institution/alice/artefacts/alice_pub2.html",
+  "inReplyTo": "urn:uuid:0a7a1848-e90c-484c-b8a0-6717cf6b2afc",
+  "object": {
+    "id": "http://demo.librecat.org/record/128",
+    "type": "Document"
+  },
+  "origin": {
+    "id": "https://hochstenbach.solidcommunity.net/registrator/profile/orchestrator.ttl#me",
+    "type": "http://xmlns.com/foaf/0.1/Service",
+    "inbox": "https://hochstenbach.solidcommunity.net/registrator/orchestrator/"
+  },
+  "target": {
+    "id": "https://bellow2.ugent.be/institution/alice/card.ttl#me",
+    "type": "http://www.w3.org/ns/activitystreams#Person",
+    "inbox": "https://bellow2.ugent.be/institution/alice/inbox"
+  }
+}
