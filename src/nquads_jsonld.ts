@@ -50,8 +50,6 @@ async function quadsToJson(inputFile: string, topId: string) {
     // Inline the contexts to disable network access 
     frame = inlineContext('context', frame);
 
-    console.log(JSON.stringify(frame));
-
     const nquadStr  = fs.readFileSync(inputFile,'utf-8');
     
     const ld = await jsonld.fromRDF(nquadStr,{ format:'application/n-quads'});
