@@ -1,8 +1,8 @@
 
 clean:
 	rm -f output/sendEventLog/* ;
-	rm -f output/sendInbox/* 
-	rm -f output/sendOutbox/* 
+	rm -f output/sendOrigin/* 
+	rm -f output/sendTarget/* 
 
 cache:
 	wget -O context/notify.json https://notify.coar-repositories.org/schema/notify.json ;
