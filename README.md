@@ -7,7 +7,7 @@ Keeping it simple for now.
 
 # Required
 
-- [EYE](http://eulersharp.sourceforge.net)
+- [EYE](https://github.com/josd/eye/releases/tag/v21.0811.1752) version v21.0811.1752
 - [SWIPL](https://www.swi-prolog.org)
 - [Node](https://nodejs.org/en/)
 - Typescript - `npm install -g typescipt`
