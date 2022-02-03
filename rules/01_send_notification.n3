@@ -19,7 +19,7 @@ PREFIX fno:  <https://w3id.org/function/ontology#>
 {
   [ pol:policy [
       a fno:Execution ;
-      fno:executes ex:sendOutbox ;
+      fno:executes ex:sendTarget ;
       ex:notification [
         a as:Accept ;
         a coar:ReviewRequest ;
