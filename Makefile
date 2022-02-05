@@ -9,10 +9,10 @@ cache:
 	wget -O context/activitystreams.jsonld https://www.w3.org/ns/activitystreams.jsonld
 
 compile:
-	tsc
+	npx tsc
 
 watch:
-	tsc -w
+	npx tsc -w
 
 eyetest:
 	eye --pass --quiet --nope data/coar_offer.n3 rules/*
